@@ -1,0 +1,51 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+int voltagePin = A1;
+int temperaturePin = A2;
+int currentPin = A3;
+
+float batteryCapacity = 500.0; // in milliampere hours (mAh)
+float batteryVoltageMax = 9.0; // in volts
+float batteryVoltageMin = 6.0; // in volts
+
+void setup() {
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0,0);
+  lcd.print("Battery Voltage: ");
+  lcd.setCursor(0,1);
+  lcd.print("Temperature: ");
+}
+
+void loop() {
+  float voltage = analogRead(voltagePin) * (5.0 / 1023.0); // convert to volts
+  float temperature = analogRead(temperaturePin) * (5.0 / 1023.0); // convert to volts
+  float current = analogRead(currentPin) * (5.0 / 1023.0); // convert to volts
+  
+  // Calculate state of charge (SoC) based on voltage, temperature, and current
+  float soc = calculateSOC(voltage, temperature, current);
+  
+  // Display voltage and temperature on LCD
+  lcd.setCursor(16,0);
+  lcd.print(voltage);
+  lcd.print(" V");
+  lcd.setCursor(12,1);
+  lcd.print(temperature);
+  lcd.print(" C");
+  
+  // Display state of charge (SoC) on LCD
+  lcd.setCursor(0,0);
+  lcd.print("Battery SoC: ");
+  lcd.print(soc);
+  lcd.print(" % ");
+  
+  delay(1000); 
+}
+
+float calculateSOC(float voltage, float temperature, float current) {
+  // Perform SOC calculation based on battery characteristics
+  float capacityRemaining = (voltage - batteryVoltMin) * batteryCapacity / (batteryVoltMax - batteryVoltMin);
+  float currentDraw = current * (batteryVoltMax - voltage) / (batteryVoltMax - batteryVoltMin)
