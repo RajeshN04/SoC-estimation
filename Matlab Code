@@ -1,0 +1,62 @@
+open_system('ctrlKalmanNavigationExample');
+
+sim('ctrlKalmanNavigationExample');
+
+figure;
+% Plot results and connect data points with a solid line.
+plot(x(:,1),x(:,2),'bx',...
+    y(:,1),y(:,2),'gd',...
+    xhat(:,1),xhat(:,2),'ro',...
+    'LineStyle','-');
+title('Position');
+xlabel('East [m]');
+ylabel('North [m]');
+legend('Actual','Measured','Kalman filter estimate','Location','Best');
+axis tight;
+
+e_ve = xhat(:,3)-x(:,3); % [m/s] Kalman filter east velocity error
+e_vn = xhat(:,4)-x(:,4); % [m/s] Kalman filter north velocity error
+figure;
+% Velocity in east direction and its estimate
+subplot(2,1,1);
+plot(t,x(:,3),'b',t,xhat(:,3),'r');
+ylabel('Velocity - East [m/s]');
+xlabel('Time [s]');
+legend('Actual','Kalman filter','Location','Best');
+axis tight;
+subplot(2,1,2);
+% Estimation error
+plot(t,e_ve,'r');
+ylabel('Velocity Error - East [m/s]');
+xlabel('Time [s]');
+legend(sprintf('Kalman filter: %.3f',norm(e_ve,1)/numel(e_ve)));
+axis tight;
+
+% East position measurement error [m]
+n_xe = y(:,1)-x(:,1);
+% North position measurement error [m]
+n_xn = y(:,2)-x(:,2);
+% Kalman filter east position error [m]
+e_xe = xhat(:,1)-x(:,1);
+% Kalman filter north position error [m]
+e_xn = xhat(:,2)-x(:,2);
+
+figure;
+% East Position Errors
+subplot(2,1,1);
+plot(t,n_xe,'g',t,e_xe,'r');
+ylabel('Position Error - East [m]');
+xlabel('Time [s]');
+legend(sprintf('Meas: %.3f',norm(n_xe,1)/numel(n_xe)),...
+    sprintf('Kalman f.: %.3f',norm(e_xe,1)/numel(e_xe)));
+axis tight;
+% North Position Errors
+subplot(2,1,2);
+plot(t,y(:,2)-x(:,2),'g',t,xhat(:,2)-x(:,2),'r');
+ylabel('Position Error - North [m]');
+xlabel('Time [s]');
+legend(sprintf('Meas: %.3f',norm(n_xn,1)/numel(n_xn)),...
+    sprintf('Kalman f: %.3f',norm(e_xn,1)/numel(e_xn)));
+axis tight;
+
+bdclose('ctrlKalmanNavigationExample');
