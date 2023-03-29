@@ -3,37 +3,34 @@
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-int voltagePin = A1;
-int temperaturePin = A2;
-int currentPin = A3;
+int vPin = A1;
+int tPin = A2;
+int cPin = A3;
 
 float batteryCapacity = 500.0; // in milliampere hours (mAh)
-float batteryVoltageMax = 9.0; // in volts
-float batteryVoltageMin = 6.0; // in volts
+float batteryVoltMax = 9.0; // in volts
+float batteryVoltMin = 6.0; // in volts
 
 void setup() {
   lcd.init();
   lcd.backlight();
   lcd.setCursor(0,0);
-  lcd.print("Battery Voltage: ");
+  lcd.print("Battery Volt: ");
   lcd.setCursor(0,1);
-  lcd.print("Temperature: ");
+  lcd.print("Temp: ");
 }
 
 void loop() {
-  float voltage = analogRead(voltagePin) * (5.0 / 1023.0); // convert to volts
-  float temperature = analogRead(temperaturePin) * (5.0 / 1023.0); // convert to volts
-  float current = analogRead(currentPin) * (5.0 / 1023.0); // convert to volts
+  float volt = analogRead(vPin) * (5.0 / 1023.0); 
+  float temp = analogRead(tPin) * (5.0 / 1023.0); 
+  float cur = analogRead(cPin) * (5.0 / 1023.0); 
   
-  // Calculate state of charge (SoC) based on voltage, temperature, and current
-  float soc = calculateSOC(voltage, temperature, current);
-  
-  // Display voltage and temperature on LCD
-  lcd.setCursor(16,0);
-  lcd.print(voltage);
-  lcd.print(" V");
+ 
   lcd.setCursor(12,1);
-  lcd.print(temperature);
+  lcd.print(volt);
+  lcd.print(" V");
+  lcd.setCursor(16,0);
+  lcd.print(temp);
   lcd.print(" C");
   
   // Display state of charge (SoC) on LCD
@@ -45,7 +42,7 @@ void loop() {
   delay(1000); 
 }
 
-float calculateSOC(float voltage, float temperature, float current) {
+float calculateSOC(float volt, float temp, float cur) {
   // Perform SOC calculation based on battery characteristics
-  float capacityRemaining = (voltage - batteryVoltMin) * batteryCapacity / (batteryVoltMax - batteryVoltMin);
-  float currentDraw = current * (batteryVoltMax - voltage) / (batteryVoltMax - batteryVoltMin)
+  float capacityRemaining = (volt - batteryVoltMin) * batteryCapacity / (batteryVoltMax - batteryVoltMin);
+  float currentDraw = current * (batteryVoltMax - volt) / (batteryVoltMax - batteryVoltMin)
