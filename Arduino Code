@@ -47,4 +47,6 @@ float calculateSOC(float volt, float temp, float cur) {
   // Performing SOC calculation based on battery characteristics
   float capacityRemaining = (volt - batteryVoltMin) * batteryCapacity / (batteryVoltMax - batteryVoltMin);
   float curDraw = cur * (batteryVoltMax - volt) / (batteryVoltMax - batteryVoltMin);
+  float soc = capacityRemaining / batteryCapacity * 100.0;
+  return soc;
 }
