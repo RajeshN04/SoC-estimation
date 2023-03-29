@@ -23,7 +23,8 @@ void setup() {
 void loop() {
   float volt = analogRead(vPin) * (5.0 / 1023.0); 
   float temp = analogRead(tPin) * (5.0 / 1023.0); 
-  float cur = analogRead(cPin) * (5.0 / 1023.0); 
+  float cur = analogRead(cPin) * (5.0 / 1023.0);
+  float soc = calculateSOC(volt, temp, cur);
   
  
   lcd.setCursor(12,1);
@@ -43,6 +44,7 @@ void loop() {
 }
 
 float calculateSOC(float volt, float temp, float cur) {
-  // Perform SOC calculation based on battery characteristics
+  // Performing SOC calculation based on battery characteristics
   float capacityRemaining = (volt - batteryVoltMin) * batteryCapacity / (batteryVoltMax - batteryVoltMin);
-  float currentDraw = current * (batteryVoltMax - volt) / (batteryVoltMax - batteryVoltMin)
+  float curDraw = cur * (batteryVoltMax - volt) / (batteryVoltMax - batteryVoltMin);
+}
