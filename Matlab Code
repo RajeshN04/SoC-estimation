@@ -13,8 +13,8 @@ ylabel('North [m]');
 legend('Actual','Measured','Kalman filter estimate','Location','Best');
 axis tight;
 
-e_ve = xhat(:,3)-x(:,3); % [m/s] Kalman filter east velocity error
-e_vn = xhat(:,4)-x(:,4); % [m/s] Kalman filter north velocity error
+e_ve = xhat(:,3)-x(:,3);
+e_vn = xhat(:,4)-x(:,4); 
 figure;
 
 subplot(2,1,1);
